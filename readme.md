@@ -64,7 +64,7 @@ Temperature3 = (float) control_data_in[21] / 100 + control_data_in[22];
 
 ## Electrode configuration
 
-The "standard" configuration of the electrodes seems to use 4 channels for the "reservoirs", with two electrodes connected to the same channel (seen below). The main area consists of 8\*14 electrodes, connected from left to right, top to bottom, one column at a time. In other words, the order is (0, 0), (0, 1), ... (0, 7), (1, 0), (1, 1), ... (13, 7).
+The "standard" configuration of the electrodes seems to use 4 channels for the "reservoirs", with two electrodes connected to the same channel in a colon shape (highlighted below). The main area consists of 8\*14 electrodes, connected from left to right, top to bottom, one column at a time. In other words, the order is (0, 0), (0, 1), ... (0, 7), (1, 0), (1, 1), ... (13, 7).
 
 ![These two electrodes are connected to the same channel](dispense_pads_connected.png)
 
