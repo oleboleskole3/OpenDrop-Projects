@@ -16,8 +16,20 @@ class Device {
   }
   
   // Advanced operations
-  void clear_device() { // Sweeps the surface into the bottom right reservoir
+  void clear_device() {
+    // Sweeps the surface into the bottom right reservoir
+    // Enables whole surface and bottom right reservoir,
+    // then gradually reduces enabled area from left to right,
+    // top to bottom, until only the bottom right reservoir is
+    // enabled. Then retracts liquid into reservoir.
+    
     this.fill(true); // Enable whole surface
+    
+    // Enable bottom right reservoir
+    this.brRes.sOn();
+    this.brRes.cOn();
+    this.brRes.rOn();
+    this.brRes.bOn();
     
     for (int i = 0; i < Device.width - 1; i++) {
       this.fillRow(i, false);
@@ -31,6 +43,16 @@ class Device {
     }
     
     this.electrodes[13][7] = false;
+    this.write();
+    delay(minTimeBetweenMovement);
+    this.electrodes[13][6] = false;
+    this.write();
+    delay(minTimeBetweenMovement);
+    this.brRes.sOff();
+    this.write();
+    delay(minTimeBetweenMovement);
+    this.brRes.cOff();
+    this.brRes.rOff();
     this.write();
     delay(minTimeBetweenMovement);
   }
@@ -60,5 +82,6 @@ class Device {
         buffer[8 + y + (x * 8)] = electrodes[x][y];
       }
     }
+    // todo: serialize and transmit
   }
 }
