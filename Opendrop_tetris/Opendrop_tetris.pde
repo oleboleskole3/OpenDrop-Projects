@@ -3,6 +3,11 @@ Serial serialport;
 
 Electrode[] electrodeArray;
 
+boolean gameRunning = false;
+
+int lastFrame = 0;
+final int timePerFrame = Device.minTimeBetweenMovement;
+
 void setup() {
   size(420, 160);
   
@@ -33,6 +38,15 @@ void setup() {
   }
   
   electrodesLoad();
+
+  // Enable bottom line, supposed to always be on
+  d.brRes.rOn();
+  d.brRes.cOn();
+  d.brRes.sOn();
+  d.fillColumn(13, true);
+  d.write();
+
+  println("To clear screen, press space, to start game press enter");
 }
 
 void draw() {
@@ -41,6 +55,58 @@ void draw() {
   for (int i = 0; i < electrodeArray.length; i++) {
     electrodeArray[i].drawElectrode();
   }
+
+  if (gameRunning && millis() - lastFrame > timePerFrame) {
+    lastFrame = millis();
+    thread("gameLoop");
+  }
+}
+
+void gameLoop() {
+  gameRunning = false;
+  dispenseBlock();
+}
+
+void dispenseBlock() {
+  Reservoir res = d.tlRes;
+
+  res.rOn();
+  d.write();
+  delay(timePerFrame);
+
+  res.sOn();
+  res.cOn();
+  res.bOff();
+  d.write();
+  delay(timePerFrame);
+
+  res.rOff();
+  res.cOff();
+  d.electrodes[0][1] = true;
+  d.write();
+  delay(timePerFrame);
+
+  d.electrodes[0][2] = true;
+  d.write();
+  delay(timePerFrame);
+
+  d.electrodes[0][3] = true;
+  d.write();
+  delay(timePerFrame);
+
+  d.electrodes[0][4] = true;
+  d.write();
+  delay(timePerFrame);
+
+  res.sOff();
+  res.rOn();
+  res.bOn();
+  d.write();
+  delay(timePerFrame);
+
+  res.rOff();
+  d.write();
+  delay(timePerFrame);
 }
 
 void keyPressed() {
@@ -50,20 +116,18 @@ void keyPressed() {
 // called by keyPressed
 void keyPressedThread() {
   if (key == ' ') {
-    println("clear");
+    println("Clearing screen, don't start game!");
     d.clear_device();
-  } else if (key == 't') {
-    println("tl");
-    d.tlRes.dispense();
-  } else if (key == 'g') {
-    println("bl");
-    d.blRes.dispense();
-  } else if (key == 'y') {
-    println("tr");
-    d.trRes.dispense();
-  } else if (key == 'h') {
-    println("br");
-    d.brRes.dispense();
+    // Enable bottom line, supposed to always be on
+    d.brRes.rOn();
+    d.brRes.cOn();
+    d.brRes.sOn();
+    d.fillColumn(13, true);
+    d.write();
+    println("Screen cleared, now you're allowed to start the game!");
+  } else if (key == '\n') {
+    println("Starting game...");
+    gameRunning = true;
   }
 }
 
