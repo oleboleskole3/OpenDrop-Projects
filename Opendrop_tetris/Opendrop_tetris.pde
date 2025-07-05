@@ -97,9 +97,23 @@ void gameLoop() {
     switch (nextDir) {
       case RIGHT:
         currPiece.originPos[1]--;
+        // Check collision,
+        // if trying to move out of bounds, index out of bounds will be thrown
+        try {
+          if (currPiece.checkOn()) throw new Exception();
+        } catch (Exception e) {
+          currPiece.originPos[1]++;
+        }
         break;
       case LEFT:
         currPiece.originPos[1]++;
+        // Check collision,
+        // if trying to move out of bounds, index out of bounds will be thrown
+        try {
+          if (currPiece.checkOn()) throw new Exception();
+        } catch (Exception e) {
+          currPiece.originPos[1]--;
+        }
         break;
     }
     currPiece.on();
