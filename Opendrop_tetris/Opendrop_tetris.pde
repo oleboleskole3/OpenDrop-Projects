@@ -20,6 +20,8 @@ final int[][][] tetrominos = {
   {{0, 0}, {1, 0},{2, 0},{2, 1}}
 };
 
+TetrominoPiece currPiece;
+
 void setup() {
   size(420, 160);
   
@@ -75,8 +77,19 @@ void draw() {
 }
 
 void gameLoop() {
-  gameRunning = false;
-  dispenseBlock();
+  if (currPiece == null) {
+    // Dispense block
+    gameRunning = false; // pause game
+    dispenseBlock();
+    gameRunning = true; // unpause and wait for next frame
+    return;
+  }
+  boolean couldFall = currPiece.tryFall();
+  d.write();
+  if (!couldFall) {
+    // Piece has landed, forget this piece
+    currPiece = null;
+  }
 }
 
 void dispenseBlock() {
@@ -128,19 +141,69 @@ void dispenseBlock() {
 
   // Shape the 4 drops into tetromino
   d.electrodes[0][1] = false;
-  d.electrodes[tetromino[0][0]][4 + tetromino[0][1]] = true;
-  d.write();
-  delay(timePerFrame);
-
-  d.electrodes[0][2] = false;
   d.electrodes[tetromino[1][0]][4 + tetromino[1][1]] = true;
   d.write();
   delay(timePerFrame);
 
-  d.electrodes[0][3] = false;
+  d.electrodes[0][2] = false;
   d.electrodes[tetromino[2][0]][4 + tetromino[2][1]] = true;
   d.write();
   delay(timePerFrame);
+
+  d.electrodes[0][3] = false;
+  d.electrodes[tetromino[3][0]][4 + tetromino[3][1]] = true;
+  d.write();
+  delay(timePerFrame);
+
+  int[] originPos = {0, 4};
+  currPiece = new TetrominoPiece(d, tetromino, originPos);
+}
+
+class TetrominoPiece {
+  int[][] tetromino;
+  int[] originPos;
+  Device d;
+
+  TetrominoPiece(Device device, int[][] tetromino, int[] originPos) {
+    this.tetromino = tetromino;
+    this.originPos = originPos;
+    this.d = device;
+  }
+
+  boolean tryFall() {
+    this.off(); // disable at curr pos
+    originPos[0]++; // fall 1 block
+    if (this.checkOn()) {
+      // if any of the blocks are on, theres overlap. This tetromino has now reached the bottom.
+      originPos[0]--; // raise back up
+      this.on(); // reenable
+      return false; // unable to fall further
+    }
+    this.on(); // reenable at new pos
+    return true; // hasn't collided yet
+  }
+
+  boolean checkOn() {
+    return
+      d.electrodes[originPos[0] + tetromino[0][0]][originPos[1] + tetromino[0][1]] ||
+      d.electrodes[originPos[0] + tetromino[1][0]][originPos[1] + tetromino[1][1]] ||
+      d.electrodes[originPos[0] + tetromino[2][0]][originPos[1] + tetromino[2][1]] ||
+      d.electrodes[originPos[0] + tetromino[3][0]][originPos[1] + tetromino[3][1]];
+  }
+
+  void on() {
+    d.electrodes[originPos[0] + tetromino[0][0]][originPos[1] + tetromino[0][1]] = true;
+    d.electrodes[originPos[0] + tetromino[1][0]][originPos[1] + tetromino[1][1]] = true;
+    d.electrodes[originPos[0] + tetromino[2][0]][originPos[1] + tetromino[2][1]] = true;
+    d.electrodes[originPos[0] + tetromino[3][0]][originPos[1] + tetromino[3][1]] = true;
+  }
+  
+  void off() {
+    d.electrodes[originPos[0] + tetromino[0][0]][originPos[1] + tetromino[0][1]] = false;
+    d.electrodes[originPos[0] + tetromino[1][0]][originPos[1] + tetromino[1][1]] = false;
+    d.electrodes[originPos[0] + tetromino[2][0]][originPos[1] + tetromino[2][1]] = false;
+    d.electrodes[originPos[0] + tetromino[3][0]][originPos[1] + tetromino[3][1]] = false;
+  }
 }
 
 void keyPressed() {
