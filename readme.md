@@ -2,7 +2,7 @@
 
 [(For context see this video)](https://www.youtube.com/watch?v=rf-efIZI_Dg)
 
-This repository contains my struggles to parse the control protocol of the [OpenDrop V4 device](https://gaudishop.ch/index.php/product-category/opendrop/) from the source code of the official OpenDrop controller found in [this repository](https://github.com/GaudiLabs/OpenDrop) ("OpenDropController4_25" folder as of writing)
+This repository contains my struggles to parse the control protocol of the [OpenDrop V4 device](https://gaudishop.ch/index.php/product-category/opendrop/) from the source code of the official OpenDrop controller found in [this repository](https://github.com/GaudiLabs/OpenDrop) ("OpenDropController4_25" folder as of writing). This repository also includes my efforts to recreate the official controller with a greater focus on programmmable control.
 
 ## Current findings:
 
@@ -55,6 +55,7 @@ control_data_out[10] = (int) setTemperature3;
 - [17-18] = Current temperature of zone 1
 - [19-20] = Current temperature of zone 2
 - [21-22] = Current temperature of zone 3
+- [23] = BoardID (0x0: V4.1, 0x1: V4.1 with magnet, 0x10: V4.2, 0x11: V4.2 with magnet, 0x12: V4.2 with magnet & temperature)
 
 ```java
 Temperature1 = (float) control_data_in[17] / 100 + control_data_in[18];
