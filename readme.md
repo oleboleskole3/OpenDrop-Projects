@@ -32,7 +32,7 @@ The official controller includes a drop dispensing sequence, what follows is a s
 
 ## Serial protocol:
 
-The serial protocol seems to consist of sending an array of 128 bits for the display channels followed by 2 bytes of so-called _control lines_. This is achieved in the official controller by sending a serialized version of the `fluxels` array for a given frame. Not sure what these control lines actually control.
+The serial protocol seems to consist of sending an array of 128 bits for the display channels followed by 2 bytes of so-called _control lines_. This is achieved in the official controller by sending a serialized version of the `fluxels` array for a given frame, where the `fluxels` array also contains the control lines. Not sure what these control lines actually control.
 
 ```java
 int fluxel_number = 128+16; // fluexel array plus two control lines
