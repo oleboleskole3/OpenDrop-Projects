@@ -44,27 +44,24 @@ void draw() {
 }
 
 void keyPressed() {
-  thread("a");
+  thread("keyPressedThread");
 }
 
-void a() {
+// called by keyPressed
+void keyPressedThread() {
   if (key == ' ') {
     println("clear");
     d.clear_device();
-  }
-  if (key == 't') {
+  } else if (key == 't') {
     println("tl");
     d.tlRes.dispense();
-  }
-  if (key == 'g') {
+  } else if (key == 'g') {
     println("bl");
     d.blRes.dispense();
-  }
-  if (key == 'y') {
+  } else if (key == 'y') {
     println("tr");
     d.trRes.dispense();
-  }
-  if (key == 'h') {
+  } else if (key == 'h') {
     println("br");
     d.brRes.dispense();
   }
