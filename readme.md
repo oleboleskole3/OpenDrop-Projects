@@ -10,7 +10,7 @@ This repository contains my struggles to parse the control protocol of the [Open
 
 The official controller includes a drop dispensing sequence, what follows is a sketch of this sequence:
 
-![Sketch of the drop dispensing sequence](dispense.png)
+![Sketch of the drop dispensing sequence](docsMedia/dispense.png)
 
 ## Serial protocol:
 
@@ -67,7 +67,7 @@ Temperature3 = (float) control_data_in[21] / 100 + control_data_in[22];
 
 The "standard" configuration of the electrodes seems to use 4 channels for the "reservoirs", with two electrodes connected to the same channel in a colon shape (highlighted below). The main area consists of 8\*14 electrodes, connected from left to right, top to bottom, one column at a time. In other words, the order is (0, 0), (0, 1), ... (0, 7), (1, 0), (1, 1), ... (13, 7).
 
-![These two electrodes are connected to the same channel](dispense_pads_connected.png)
+![These two electrodes are connected to the same channel](docsMedia/dispense_pads_connected.png)
 
 The channel order of the cartridge is as follows:
 
@@ -95,6 +95,6 @@ The channel order of the cartridge is as follows:
 
 This order also follows what happens if the official controller is compiled with `showNumbers = true`
 
-![Photo of the official controller with show number enabled](electrodes_show_numbers.png)
+![Photo of the official controller with show number enabled](docsMedia/electrodes_show_numbers.png)
 
-![Photo of the two sides of the cartridge pcb, clearly showing the pcb traces](ElectrodeArray.jpg)
+![Photo of the two sides of the cartridge pcb, clearly showing the pcb traces](docsMedia/ElectrodeArray.jpg)
