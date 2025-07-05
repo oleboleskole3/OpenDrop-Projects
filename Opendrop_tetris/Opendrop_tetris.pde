@@ -8,6 +8,18 @@ boolean gameRunning = false;
 int lastFrame = 0;
 final int timePerFrame = Device.minTimeBetweenMovement;
 
+// shape of tetrominos, blockPos = [shapeIndex][blockIndex]
+final int[][][] tetrominos = {
+  // Line
+  {{0, 0}, {1, 0},{2, 0},{3, 0}},
+  // T
+  {{0, 0}, {1, 0},{1, 1},{1, -1}},
+  // L
+  {{0, 0}, {1, 0},{2, 0},{2, -1}},
+  // J
+  {{0, 0}, {1, 0},{2, 0},{2, 1}}
+};
+
 void setup() {
   size(420, 160);
   
@@ -70,6 +82,7 @@ void gameLoop() {
 void dispenseBlock() {
   Reservoir res = d.tlRes;
 
+  // Open reservoir
   res.rOn();
   d.write();
   delay(timePerFrame);
@@ -82,6 +95,7 @@ void dispenseBlock() {
 
   res.rOff();
   res.cOff();
+  // Draw out 4 blocks
   d.electrodes[0][1] = true;
   d.write();
   delay(timePerFrame);
@@ -98,6 +112,7 @@ void dispenseBlock() {
   d.write();
   delay(timePerFrame);
 
+  // Close reservoir
   res.sOff();
   res.rOn();
   res.bOn();
@@ -105,6 +120,25 @@ void dispenseBlock() {
   delay(timePerFrame);
 
   res.rOff();
+  d.write();
+  delay(timePerFrame);
+
+  // select random tetromino
+  int[][] tetromino = tetrominos[floor(random(4))];
+
+  // Shape the 4 drops into tetromino
+  d.electrodes[0][1] = false;
+  d.electrodes[tetromino[0][0]][4 + tetromino[0][1]] = true;
+  d.write();
+  delay(timePerFrame);
+
+  d.electrodes[0][2] = false;
+  d.electrodes[tetromino[1][0]][4 + tetromino[1][1]] = true;
+  d.write();
+  delay(timePerFrame);
+
+  d.electrodes[0][3] = false;
+  d.electrodes[tetromino[2][0]][4 + tetromino[2][1]] = true;
   d.write();
   delay(timePerFrame);
 }
