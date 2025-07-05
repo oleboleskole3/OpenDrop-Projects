@@ -20,6 +20,8 @@ This repository contains my struggles to parse the control protocol of the [Open
   - [x] fillColumn(int, bool)
   - [x] clear_screen();
   - [ ] Come up with other useful functions
+- [ ] Play audio
+  - The V4 OpenDrop is able to play simple audio synths, although this is not currently possible over the serial protocol. This would require modified firmware.
 - [ ] Add more requirements to this checklist
 
 ## Current findings:
