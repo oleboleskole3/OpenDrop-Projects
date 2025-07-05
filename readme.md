@@ -93,4 +93,8 @@ The channel order of the cartridge is as follows:
   3.  Colon
   4.  Square
 
+This order also follows what happens if the official controller is compiled with `showNumbers = true`
+
+![Photo of the official controller with show number enabled](electrodes_show_numbers.png)
+
 ![Photo of the two sides of the cartridge pcb, clearly showing the pcb traces](ElectrodeArray.jpg)
