@@ -7,7 +7,7 @@ This repository contains my struggles to parse the control protocol of the [Open
 ## Currently implemented in controller:
 
 - [x] Serial protocol
-  - [x] Transmit data
+  - [x] Transmit data (untested)
   - [ ] Recieve data (Not currently useful, as Steve Mould doens't own a cartridge with sensors)
 - [x] Display of currently enabled electrodes
 - [x] Reservoir control
@@ -20,6 +20,7 @@ This repository contains my struggles to parse the control protocol of the [Open
   - [x] fillColumn(int, bool)
   - [x] clear_screen();
   - [ ] Come up with other useful functions
+- [ ] Add more requirements to this checklist
 
 ## Current findings:
 
