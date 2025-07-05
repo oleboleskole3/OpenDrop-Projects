@@ -17,10 +17,18 @@ final int[][][] tetrominos = {
   // L
   {{0, 0}, {1, 0},{2, 0},{2, -1}},
   // J
-  {{0, 0}, {1, 0},{2, 0},{2, 1}}
+  {{0, 0}, {1, 0},{2, 0},{2, 1}},
+  // Square
+  {{0, 0}, {1, 0},{0, 1},{1, 1}},
+  // Zigzag 1
+  {{0, 0}, {1, 0},{1, 1},{0, -1}},
+  // Zigzag 2
+  {{0, 0}, {1, 0},{1, -1},{0, 1}}
 };
 
 TetrominoPiece currPiece;
+
+int nextDir;
 
 void setup() {
   size(420, 160);
@@ -84,6 +92,20 @@ void gameLoop() {
     gameRunning = true; // unpause and wait for next frame
     return;
   }
+  if (nextDir >= 37) {
+    currPiece.off();
+    switch (nextDir) {
+      case RIGHT:
+        currPiece.originPos[1]--;
+        break;
+      case LEFT:
+        currPiece.originPos[1]++;
+        break;
+    }
+    currPiece.on();
+    nextDir = 0;
+  }
+
   boolean couldFall = currPiece.tryFall();
   d.write();
   if (!couldFall) {
@@ -137,7 +159,9 @@ void dispenseBlock() {
   delay(timePerFrame);
 
   // select random tetromino
-  int[][] tetromino = tetrominos[floor(random(4))];
+  int i = floor(random(tetrominos.length));
+  println("Creating tetromino " + i);
+  int[][] tetromino = tetrominos[i];
 
   // Shape the 4 drops into tetromino
   d.electrodes[0][1] = false;
@@ -225,6 +249,8 @@ void keyPressedThread() {
   } else if (key == '\n') {
     println("Starting game...");
     gameRunning = true;
+  } else if (keyCode >= 37 && keyCode <= 40) { // arrow keys are 37-40
+    nextDir = keyCode;
   }
 }
 
