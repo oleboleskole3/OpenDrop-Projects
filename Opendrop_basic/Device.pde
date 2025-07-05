@@ -35,6 +35,7 @@ class Device {
     blRes.bOn();
     trRes.bOn();
     brRes.bOn();
+    this.write();
   }
   
   // Advanced operations
