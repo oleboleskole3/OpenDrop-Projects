@@ -1,3 +1,5 @@
+import processing.serial.*;
+
 class Device {
   static final int width = 14;
   static final int height = 8;
@@ -12,7 +14,17 @@ class Device {
   Reservoir trRes = new Reservoir(buffer, 120);
   Reservoir_reversed brRes = new Reservoir_reversed(buffer, 124);
   
+  Serial serialport;
+  
+  // Unused
+  int[] control_data_in = new int[24];
+  int[] control_data_out = new int[14];
+  
   Device() {
+  }
+  
+  Device(Serial serialport) {
+    this.serialport = serialport;
   }
   
   // Advanced operations
@@ -77,11 +89,43 @@ class Device {
   }
   
   void write() {
+    // Copy main section to buffer
     for (int x = 0; x < electrodes.length; x++) {
       for (int y = 0; y < electrodes[x].length; y++) {
         buffer[8 + y + (x * 8)] = electrodes[x][y];
       }
     }
-    // todo: serialize and transmit
+    
+    if (serialport != null) {
+      // Communicate with device
+      
+      while (serialport.available() > 0) serialport.read(); // Clear recieving buffer
+      
+      // Send display channels
+      byte toTransmit;
+      for (int i = 0; i < buffer.length; i += 8) {
+        toTransmit = byte(buffer[i + 0]);
+        toTransmit += byte(buffer[i + 1]);
+        toTransmit += byte(buffer[i + 2]);
+        toTransmit += byte(buffer[i + 3]);
+        toTransmit += byte(buffer[i + 4]);
+        toTransmit += byte(buffer[i + 5]);
+        toTransmit += byte(buffer[i + 6]);
+        toTransmit += byte(buffer[i + 7]);
+        
+        serialport.write(toTransmit);
+      }
+      
+      // Send control lines (unused)
+      serialport.write(0);
+      serialport.write(0);
+      
+      // Send control data
+      for (int i = 0; i < control_data_out.length; i++) {
+        serialport.write(control_data_out[i]);
+      }
+      
+      // todo: read control data
+    }
   }
 }
