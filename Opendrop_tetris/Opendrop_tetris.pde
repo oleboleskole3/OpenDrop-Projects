@@ -125,6 +125,34 @@ void gameLoop() {
   if (!couldFall) {
     // Piece has landed, forget this piece
     currPiece = null;
+
+    // check lines (don't include last line)
+    gameRunning = false; // pause game
+    for (int i = 0; i < 13; i++) {
+      boolean lineFull = true;
+      for (int j = 0; j < 8; j++) {
+        lineFull = lineFull && d.electrodes[i][j];
+      }
+
+      if (lineFull) {
+        println("Line clear!");
+        // move above blocks down
+        for (int j = i - 1; j >= 0; j--) {
+          boolean hasBlocks = false;
+          for (int y = 0; y < 8; y++) {
+            hasBlocks = hasBlocks || d.electrodes[j][y];
+            d.electrodes[j + 1][y] = d.electrodes[j][y];
+            d.electrodes[j][y] = false;
+          }
+          if (hasBlocks) {
+            d.write();
+            delay(timePerFrame);
+          }
+        }
+      }
+    }
+    gameRunning = true; // unpause and wait for next frame
+    return;
   }
 }
 
