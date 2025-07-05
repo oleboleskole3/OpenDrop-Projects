@@ -9,10 +9,10 @@ class Device {
   boolean[] buffer = new boolean[128]; 
   boolean[][] electrodes = new boolean[Device.width][Device.height]; // ([x][y])
   
-  Reservoir tlRes = new Reservoir(buffer, 0);
-  Reservoir_reversed blRes = new Reservoir_reversed(buffer, 4);
-  Reservoir trRes = new Reservoir(buffer, 120);
-  Reservoir_reversed brRes = new Reservoir_reversed(buffer, 124);
+  Reservoir tlRes = new Reservoir(0, 0, 1, this);
+  Reservoir_reversed blRes = new Reservoir_reversed(4, 0, 6, this);
+  Reservoir trRes = new Reservoir(120, 13, 1, this);
+  Reservoir_reversed brRes = new Reservoir_reversed(124, 13, 6, this);
   
   Serial serialport;
   
@@ -21,10 +21,20 @@ class Device {
   int[] control_data_out = new int[14];
   
   Device() {
+    // Enable all reservoirs in case of liquid
+    tlRes.bOn();
+    blRes.bOn();
+    trRes.bOn();
+    brRes.bOn();
   }
   
   Device(Serial serialport) {
     this.serialport = serialport;
+    // Enable all reservoirs in case of liquid
+    tlRes.bOn();
+    blRes.bOn();
+    trRes.bOn();
+    brRes.bOn();
   }
   
   // Advanced operations
@@ -44,19 +54,17 @@ class Device {
     this.brRes.bOn();
     
     for (int i = 0; i < Device.width - 1; i++) {
-      this.fillRow(i, false);
+      this.fillColumn(i, false);
       this.write();
       delay(minTimeBetweenMovement);
     }
+    this.electrodes[13][7] = false; // disable electrode below reservoir entrance
     for (int i = 0; i < Device.height - 2; i++) {
       this.electrodes[13][i] = false;
       this.write();
       delay(minTimeBetweenMovement);
     }
     
-    this.electrodes[13][7] = false;
-    this.write();
-    delay(minTimeBetweenMovement);
     this.electrodes[13][6] = false;
     this.write();
     delay(minTimeBetweenMovement);
@@ -125,7 +133,7 @@ class Device {
         serialport.write(control_data_out[i]);
       }
       
-      // todo: read control data
+      // todo: read control data, currently discarded on next transmit
     }
   }
 }
