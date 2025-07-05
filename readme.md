@@ -4,6 +4,23 @@
 
 This repository contains my struggles to parse the control protocol of the [OpenDrop V4 device](https://gaudishop.ch/index.php/product-category/opendrop/) from the source code of the official OpenDrop controller found in [this repository](https://github.com/GaudiLabs/OpenDrop) ("OpenDropController4_25" folder as of writing). This repository also includes my efforts to recreate the official controller with a greater focus on programmmable control.
 
+## Currently implemented in controller:
+
+- [x] Serial protocol
+  - [x] Transmit data
+  - [ ] Recieve data (Not currently useful, as Steve Mould doens't own a cartridge with sensors)
+- [x] Display of currently enabled electrodes
+- [x] Reservoir control
+  - [x] Individual control of electrodes
+  - [x] Drop dispense sequence
+- [x] Main screen control
+- [ ] Main screen utility functions
+  - [x] fill(bool)
+  - [x] fillRow(int, bool)
+  - [x] fillColumn(int, bool)
+  - [x] clear_screen();
+  - [ ] Come up with other useful functions
+
 ## Current findings:
 
 ### Drop dispense sequence:
