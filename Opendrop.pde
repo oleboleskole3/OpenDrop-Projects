@@ -83,8 +83,8 @@ void electrodesLoad() {
 
     electrodeArray[i].x = item.getFloat("x") + 21;
     electrodeArray[i].y = item.getFloat("y") + 8;
-    electrodeArray[i].w = item.getFloat("h");
-    electrodeArray[i].h = item.getFloat("w");
+    electrodeArray[i].w = item.getFloat("w");
+    electrodeArray[i].h = item.getFloat("h");
     electrodeArray[i].i = item.getInt("i"); 
   }
 }
