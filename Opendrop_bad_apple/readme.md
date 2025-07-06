@@ -19,3 +19,5 @@ A couple of globals can be found at the top of the main file, here's what they d
 ## Running
 
 Just open up "Opendrop_bad_apple.pde" and press run, optionally configure project using above settings
+
+Though, you do need to install the video library under Sketch > Import Library > Manage Libraries
