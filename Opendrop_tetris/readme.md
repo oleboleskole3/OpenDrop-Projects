@@ -1,6 +1,6 @@
 # Tetris game
 
-My attempt to make tetris playable on the OpenDrop, since Steve Mould proposed this challenge in his video about the device
+My attempt to make tetris playable on the OpenDrop, since Steve Mould proposed this challenge in his video about the device. This version of Tetris is working and playable.
 
 This game of tetris is to be played on the cartridge with a glass top, with the whole device rotated 90 degrees clockwise.
 
@@ -21,3 +21,9 @@ In `Device.pde` change `minTimeBetweenMovement`to speed up or slow down game
 ## Running
 
 Just open up "Opendrop_tetris.pde" and press run
+
+## Controls
+
+Space bar - clear screen (use before game start)
+Enter - start game
+Arrow keys - control current piece
