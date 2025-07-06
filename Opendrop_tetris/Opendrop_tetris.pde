@@ -19,7 +19,7 @@ final int[][][] tetrominos = {
   // J
   {{0, 0}, {1, 0},{2, 0},{2, 1}},
   // Square
-  {{0, 0}, {1, 0},{0, 1},{1, 1}},
+  {{0, 0}, {1, 0},{1, 1},{0, 1}},
   // Zigzag 1
   {{0, 0}, {1, 0},{1, 1},{0, -1}},
   // Zigzag 2
@@ -88,7 +88,11 @@ void gameLoop() {
   if (currPiece == null) {
     // Dispense block
     gameRunning = false; // pause game
-    dispenseBlock();
+    if (random(1) > 0.5) {
+      dispenseBlockLeft();
+    } else {
+      dispenseBlockRight();
+    }
     gameRunning = true; // unpause and wait for next frame
     return;
   }
@@ -113,6 +117,17 @@ void gameLoop() {
           if (currPiece.checkOn()) throw new Exception();
         } catch (Exception e) {
           currPiece.originPos[1]--;
+        }
+        break;
+      case UP:
+        currPiece.rotate();
+
+        try {
+          if (currPiece.checkOn()) throw new Exception();
+        } catch (Exception e) {
+          currPiece.rotate();
+          currPiece.rotate();
+          currPiece.rotate();
         }
         break;
     }
@@ -156,7 +171,7 @@ void gameLoop() {
   }
 }
 
-void dispenseBlock() {
+void dispenseBlockRight() {
   Reservoir res = d.tlRes;
 
   // Open reservoir
@@ -203,7 +218,10 @@ void dispenseBlock() {
   // select random tetromino
   int i = floor(random(tetrominos.length));
   println("Creating tetromino " + i);
-  int[][] tetromino = tetrominos[i];
+  int[][] tetromino = new int[4][2];
+  for (int j = 0; j < 4; j++) {
+    tetromino[j] = tetrominos[i][j].clone();
+  }
 
   // Shape the 4 drops into tetromino
   d.electrodes[0][1] = false;
@@ -225,6 +243,78 @@ void dispenseBlock() {
   currPiece = new TetrominoPiece(d, tetromino, originPos);
 }
 
+void dispenseBlockLeft() {
+  Reservoir res = d.blRes;
+
+  // Open reservoir
+  res.rOn();
+  d.write();
+  delay(timePerFrame);
+
+  res.sOn();
+  res.cOn();
+  res.bOff();
+  d.write();
+  delay(timePerFrame);
+
+  res.rOff();
+  res.cOff();
+  // Draw out 4 blocks
+  d.electrodes[0][6] = true;
+  d.write();
+  delay(timePerFrame);
+
+  d.electrodes[0][5] = true;
+  d.write();
+  delay(timePerFrame);
+
+  d.electrodes[0][4] = true;
+  d.write();
+  delay(timePerFrame);
+
+  d.electrodes[0][3] = true;
+  d.write();
+  delay(timePerFrame);
+
+  // Close reservoir
+  res.sOff();
+  res.rOn();
+  res.bOn();
+  d.write();
+  delay(timePerFrame);
+
+  res.rOff();
+  d.write();
+  delay(timePerFrame);
+
+  // select random tetromino
+  int i = floor(random(tetrominos.length));
+  println("Creating tetromino " + i);
+  int[][] tetromino = new int[4][2];
+  for (int j = 0; j < 4; j++) {
+    tetromino[j] = tetrominos[i][j].clone();
+  }
+
+  // Shape the 4 drops into tetromino
+  d.electrodes[0][6] = false;
+  d.electrodes[tetromino[1][0]][3 + tetromino[1][1]] = true;
+  d.write();
+  delay(timePerFrame);
+
+  d.electrodes[0][5] = false;
+  d.electrodes[tetromino[2][0]][3 + tetromino[2][1]] = true;
+  d.write();
+  delay(timePerFrame);
+
+  d.electrodes[0][4] = false;
+  d.electrodes[tetromino[3][0]][3 + tetromino[3][1]] = true;
+  d.write();
+  delay(timePerFrame);
+
+  int[] originPos = {0, 3};
+  currPiece = new TetrominoPiece(d, tetromino, originPos);
+}
+
 class TetrominoPiece {
   int[][] tetromino;
   int[] originPos;
@@ -234,6 +324,14 @@ class TetrominoPiece {
     this.tetromino = tetromino;
     this.originPos = originPos;
     this.d = device;
+  }
+
+  void rotate() {
+    for (int i = 0; i < tetromino.length; i++) {
+      int temp = tetromino[i][0];
+      tetromino[i][0] = -tetromino[i][1];
+      tetromino[i][1] = temp;
+    }
   }
 
   boolean tryFall() {
