@@ -88,6 +88,7 @@ void gameLoop() {
   if (currPiece == null) {
     // Dispense block
     gameRunning = false; // pause game
+    nextDir = 0; // clear input buffer
     if (random(1) > 0.5) {
       dispenseBlockLeft();
     } else {
